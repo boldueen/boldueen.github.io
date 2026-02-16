@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Picker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: -apple-system, sans-serif; padding: 16px; }
+        .template { 
+            border: 1px solid #ddd; border-radius: 12px; padding: 16px;
+            margin-bottom: 12px; cursor: pointer;
+        }
+        .template:active { background: #f0f0f0; }
+        h3 { margin: 0 0 4px; }
+        p { margin: 0; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h2>Выберите шаблон</h2>
+    <div id="templates"></div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // Захардкоженные шаблоны для теста.
+        // В продакшене — запрос к API бота.
+        const templates = [
+            { id: 1, title: "Аниме портрет", prompt: "anime style portrait" },
+            { id: 2, title: "Масляная живопись", prompt: "oil painting style" },
+            { id: 3, title: "Киберпанк", prompt: "cyberpunk neon city" },
+            { id: 4, title: "тестовый", prompt: "ussr olimpiad 80 poster" },
+        ];
+
+        const container = document.getElementById("templates");
+        templates.forEach(t => {
+            const div = document.createElement("div");
+            div.className = "template";
+            div.innerHTML = `<h3>${t.title}</h3><p>${t.prompt}</p>`;
+            div.onclick = () => {
+                // Отправляет данные боту и закрывает WebApp
+                tg.sendData(JSON.stringify({ template_id: t.id }));
+            };
+            container.appendChild(div);
+        });
+    </script>
+</body>
+</html>
